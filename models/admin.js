@@ -2,19 +2,20 @@ const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
 
-const districtSchema = new Schema({
-  country: {
+const adminSchema = new Schema({
+  email: {
     type: String,
     required: true
   },
-  city: {
+  password: {
     type: String,
     required: true
   },
-  districtName: {
-    type: String,
+  districtId: {
+    type: Schema.Types.ObjectId,
+    ref: 'District',
     required: true
   }
 });
 
-module.exports = mongoose.model('District', districtSchema);
+module.exports = mongoose.model('Admin', adminSchema);
