@@ -1,0 +1,5 @@
+postCandidate();
+getCandidate();
+
+putCandidate();
+deleteCandidate();

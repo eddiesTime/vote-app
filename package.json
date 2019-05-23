@@ -1,0 +1,31 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "The node.js/express server for our blockchain based voting app",
+  "main": "app.js",
+  "dependencies": {
+    "bcrypt": "^3.0.6",
+    "crypto-js": "^3.1.9-1",
+    "express": "^4.16.4",
+    "mongoose": "^5.5.7"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js",
+    "start-server": "node app.js",
+    "start:dev": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eddiesTime/vote-app.git"
+  },
+  "author": "Eduard Selenzow",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/eddiesTime/vote-app/issues"
+  },
+  "homepage": "https://github.com/eddiesTime/vote-app#readme"
+}

@@ -1,0 +1,3 @@
+postLogin();
+postNewPassword();
+postLogout();
