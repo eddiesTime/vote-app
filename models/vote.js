@@ -19,6 +19,15 @@ const voteSchema = new Schema({
         required: true
       }
     }
+  ],
+  blockchain: [
+    {
+      blockId: {
+        type: Schema.Types.ObjectId,
+        ref: 'Block',
+        required: true
+      }
+    }
   ]
 });
 

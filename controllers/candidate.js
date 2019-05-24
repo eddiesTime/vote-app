@@ -1,5 +1,3 @@
-const fs = require('fs');
-const path = require('path');
 const { validationResult } = require('express-validator/check');
 
 const io = require('socket.io');
