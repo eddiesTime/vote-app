@@ -13,7 +13,7 @@ const adminSchema = new Schema({
   },
   districtId: {
     type: Schema.Types.ObjectId,
-    ref: 'District',
+    ref: 'Districts',
     required: true
   }
 });

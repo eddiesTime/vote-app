@@ -12,8 +12,9 @@ const blockchainSchema = new Schema({
       }
     }
   ],
-  expireDate: {
-    type: String,
+  voteId: {
+    type: Schema.Types.ObjectId,
+    ref: 'Vote',
     required: true
   }
 });

@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const { validationResult } = require('express-validator/check');
 
-const io = require('../socket');
+const io = require('socket.io');
 const Candidate = require('../models/candidate');
 
 exports.getCandidates = async (req, res, next) => {
@@ -62,7 +62,7 @@ exports.createCandidate = async (req, res, next) => {
       action: 'create',
       candidate: { ...candidate._doc }
     });
-    res.status(201);
+    res.status(201).end('Candidate created successfully');
   } catch (err) {
     if (!err.statusCode) {
       err.statusCode = 500;
@@ -127,7 +127,7 @@ exports.deleteCandidate = async (req, res, next) => {
     }
     await Candidate.findByIdAndDelete(candidateId);
     io.getIO().emit('candidate', { action: 'delete', candidate: candidateId });
-    res.status(200);
+    res.status(200).end('Candidate deleted successfully');
   } catch (err) {
     if (!err.statusCode) {
       err.statusCode = 500;

@@ -6,9 +6,11 @@ const District = require('../models/district');
 
 exports.getDistricts = async (req, res, next) => {
   try {
+    console.log('try get all');
     const districts = await District.find();
     res.status(200).json(districts);
   } catch (err) {
+    console.log('catch all');
     if (!err.statusCode) {
       err.statusCode = 500;
     }
@@ -35,8 +37,10 @@ exports.getDistrict = async (req, res, next) => {
 };
 
 exports.createDistrict = async (req, res, next) => {
+  console.log('start create');
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
+    console.log('error case');
     const error = new Error('Validation failed, entered data is incorrect.');
     error.statusCode = 422;
     throw error;
@@ -54,9 +58,11 @@ exports.createDistrict = async (req, res, next) => {
   });
 
   try {
+    console.log('try');
     await district.save();
-    res.status(201);
+    res.status(201).end('District created successfully!');
   } catch (err) {
+    console.log('catch');
     if (!err.statusCode) {
       err.statusCode = 500;
     }
@@ -108,7 +114,7 @@ exports.deleteDistrict = async (req, res, next) => {
       throw error;
     }
     await District.findByIdAndDelete(districtId);
-    res.status(200);
+    res.status(200).end('District deleted successfully!');
   } catch (err) {
     if (!err.statusCode) {
       err.statusCode = 500;
@@ -116,8 +122,3 @@ exports.deleteDistrict = async (req, res, next) => {
     next(err);
   }
 };
-
-postDistrict();
-getDistrict();
-deleteDistrict();
-putDistrict();
