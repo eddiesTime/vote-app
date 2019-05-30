@@ -33,4 +33,14 @@ const blockSchema = new Schema({
   }
 });
 
+blockSchema.methods.calculateHash = () => {
+  this.hash = SHA256(
+    this.blockNumber +
+      this.timestamp +
+      this.candidateId.toString() +
+      this.voterId.toString() +
+      this.previousHash
+  ).toString();
+};
+
 module.exports = mongoose.model('Block', blockSchema);

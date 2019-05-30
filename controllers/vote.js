@@ -2,7 +2,7 @@ const { validationResult } = require('express-validator/check');
 const io = require('socket.io');
 
 const Vote = require('../models/vote');
-const Block = require('../models/block')
+const Block = require('../models/block');
 
 exports.getVotes = async (req, res, next) => {
   try {
@@ -51,10 +51,11 @@ exports.createVote = async (req, res, next) => {
   const vote = new Vote({
     expireDate: expireDate,
     voteName: voteName,
-    candidates: candidates
+    candidates: candidates,
+    blockchain: []
   });
   try {
-    const newVote = await vote.save();
+    const newVote = await vote.createGenesis();
     io.getIO().emit('votes', { action: 'create', vote: { ...vote._doc } });
     res.status(201).end('Vote created successfully!');
   } catch (err) {
@@ -84,26 +85,3 @@ exports.deleteVote = async (req, res, next) => {
     next(err);
   }
 };
-
-class Blockchain{
-    constructor() {
-        this.chain = [await this.createGenesis()]
-    }
-
-    async function createGenesis(){
-        return new Promise(resolve => {
-            resolve();
-        })
-    }
-
-    latestBlock(){}
-
-    addBlock(){}
-
-    checkIfAlreadyVoted(){}
-
-    checkValid(){}
-    
-    getVoteResults(){}
-
-}

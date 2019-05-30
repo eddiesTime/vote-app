@@ -26,4 +26,8 @@ const userSchema = new Schema({
   }
 });
 
+userSchema.methods.checkIfAlreadyVoted = () => {
+  return this.hasVoted;
+};
+
 module.exports = mongoose.model('User', userSchema);
