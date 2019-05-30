@@ -6,12 +6,12 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const ObjectId = mongoose.Types.ObjectId;
 
-const voteSchema = new Schema({
+const electionSchema = new Schema({
   expireDate: {
     type: String,
     required: true
   },
-  voteName: {
+  electionName: {
     type: String,
     required: true
   },
@@ -35,7 +35,7 @@ const voteSchema = new Schema({
   ]
 });
 
-voteSchema.methods.createGenesis = () => {
+electionSchema.methods.createGenesis = () => {
   const genesis = new Block({
     blockNumber: 0,
     timestamp: moment(),
@@ -57,18 +57,18 @@ voteSchema.methods.createGenesis = () => {
     });
 };
 
-voteSchema.methods.latestBlock = () => {
+electionSchema.methods.latestBlock = () => {
   return this.blockchain[this.blockchain.length - 1];
 };
 
-voteSchema.methods.addBlock = newBlock => {
+electionSchema.methods.addBlock = newBlock => {
   newBlock.previousHash = this.latestBlock().hash;
   newBlock.hash = newBlock.calculateHash();
   this.blockchain.push(newBlock);
-  return this.save();
+  this.save();
 };
 
-voteSchema.methods.checkValid = () => {
+electionSchema.methods.checkValid = () => {
   for (let i = 1; i < this.blockchain.length; i++) {
     const currentBlock = this.blockchain[i];
     const previousBlock = this.blockchain[i - 1];
@@ -83,18 +83,18 @@ voteSchema.methods.checkValid = () => {
   return true;
 };
 
-voteSchema.methods.getVoteResults = () => {
+electionSchema.methods.getelectionResults = () => {
   let result = [];
   this.candidates.forEach(candidate => {
-    result.push({ candidateId: candidate.candidateId, vote_count: 0 });
+    result.push({ candidateId: candidate.candidateId, votes_count: 0 });
   });
   for (let i = 1; i < this.blockchain.length; i++) {
     const index = result.findIndex(id => {
       return id === this.blockchain[i].candidateId;
     });
-    result[index].vote_count = result[index].vote_count + 1;
+    result[index].votes_count = result[index].votes_count + 1;
   }
   return result;
 };
 
-module.exports = mongoose.model('Vote', voteSchema);
+module.exports = mongoose.model('Election', electionSchema);
