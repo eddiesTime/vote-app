@@ -30,4 +30,9 @@ userSchema.methods.checkIfAlreadyVoted = () => {
   return this.hasVoted;
 };
 
+userSchema.methods.vote = () => {
+  this.hasVoted = true;
+  return this.save();
+};
+
 module.exports = mongoose.model('User', userSchema);
