@@ -7,21 +7,17 @@ const isAdmin = require('../middleware/is-admin');
 
 const router = express.Router();
 
-router.get('/candidates', isAuth, candidateController.getCandidates);
-router.get(
-  '/candidates/:candidateId',
-  isAuth,
-  candidateController.getCandidate
-);
-router.post('/candidate', isAuth, isAdmin, candidateController.createCandidate);
+router.get('/', isAuth, candidateController.getCandidates);
+router.get('/:candidateId', isAuth, candidateController.getCandidate);
+router.post('/', isAuth, isAdmin, candidateController.createCandidate);
 router.delete(
-  '/candidates/:candidateId',
+  '/:candidateId',
   isAuth,
   isAdmin,
   candidateController.deleteCandidate
 );
 router.put(
-  '/candidate/:candidateId',
+  '/:candidateId',
   isAuth,
   isAdmin,
   candidateController.updateCandidate

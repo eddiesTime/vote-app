@@ -90,3 +90,12 @@ exports.newPassword = async (req, res, next) => {
     next(err);
   }
 };
+
+exports.logout() = async (req, res, next) => {
+  req.isAuth = false;
+  req.isAdmin = false;
+  req.userId.destroy(err => {
+    console.log(err);
+    res.redirect('/')
+  });
+};

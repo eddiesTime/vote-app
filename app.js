@@ -5,8 +5,11 @@ const bodyParser = require('body-parser');
 const isAuth = require('./middleware/is-auth');
 const isAdmin = require('./middleware/is-admin');
 
+const authRoutes = require('./routes/auth');
 const candidateRoutes = require('./routes/candidate');
 const districtRoutes = require('./routes/district');
+const registrationRoutes = require('./routes/registration');
+const electionRoutes = require('./routes/election');
 
 const app = express();
 
@@ -26,8 +29,11 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(candidateRoutes);
+app.use(authRoutes);
+app.use('/candidates', isAuth, isAdmin, candidateRoutes);
 app.use('/districts', isAdmin, districtRoutes);
+app.use('/registration', isAuth, isAdmin, registrationRoutes);
+app.use('/elections', isAuth, isAdmin, electionRoutes);
 
 app.use((error, req, res, next) => {
   console.log(error);
