@@ -1,6 +1,6 @@
 const crypto = require('crypto');
 
-const bcrypt = require('bcryptjs');
+const bcrypt = require('bcrypt');
 
 const Admin = require('../models/admin');
 const User = require('../models/user');

@@ -2,7 +2,7 @@ const User = require('../models/user');
 const Admin = require('../models/admin');
 
 const { validationResult } = require('express-validator/check');
-const bcrypt = require('bcryptjs');
+const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 exports.login = async (req, res, next) => {
@@ -91,11 +91,11 @@ exports.newPassword = async (req, res, next) => {
   }
 };
 
-exports.logout() = async (req, res, next) => {
+exports.logout = (req, res) => {
   req.isAuth = false;
   req.isAdmin = false;
   req.userId.destroy(err => {
     console.log(err);
-    res.redirect('/')
+    res.redirect('/');
   });
 };
