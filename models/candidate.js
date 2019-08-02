@@ -13,7 +13,9 @@ const candidateSchema = new Schema({
   },
   faction: {
     type: String,
-    required: true
+    required: true,
+    default: 'Jerry',
+    enum: ['Rick', 'Morty', 'Jerry']
   },
   imageUrl: {
     type: String,

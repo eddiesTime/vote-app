@@ -13,7 +13,8 @@ const userSchema = new Schema({
   },
   changedPw: {
     type: Boolean,
-    required: true
+    required: true,
+    default: false
   },
   districtId: {
     type: Schema.Types.ObjectId,
@@ -22,7 +23,8 @@ const userSchema = new Schema({
   },
   hasVoted: {
     type: Boolean,
-    required: true
+    required: true,
+    default: false
   }
 });
 
