@@ -5,6 +5,8 @@ const { validationResult } = require('express-validator/check');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
+const GENESIS_VOTER = 'Genesis Block';
+
 exports.login = async (req, res, next) => {
   const username = req.body.username;
   const password = req.body.password;
@@ -16,6 +18,11 @@ exports.login = async (req, res, next) => {
         const error = new Error(
           'A user with this username could not be found.'
         );
+        error.statusCode = 404;
+        throw error;
+      }
+      if (loadedUser.username === GENESIS_VOTER) {
+        const error = new Error('Forbidden request, access denied');
         error.statusCode = 404;
         throw error;
       }

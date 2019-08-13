@@ -3,10 +3,15 @@ const { validationResult } = require('express-validator/check');
 const io = require('socket.io');
 const Candidate = require('../models/candidate');
 
+const GENESIS_CANDIDATE = 'Genesis Block';
+
 exports.getCandidates = async (req, res, next) => {
   try {
     const candidates = await Candidate.find();
-    res.status(200).json(candidates);
+    const noGenCandiates = candidates.filter(candidate => {
+      return candidate.firstname !== GENESIS_CANDIDATE;
+    });
+    res.status(200).json(noGenCandiates);
   } catch (err) {
     if (!err.statusCode) {
       err.statusCode = 500;
@@ -21,6 +26,11 @@ exports.getCandidate = async (req, res, next) => {
     const candidate = await Candidate.findById(candidateId);
     if (!candidate) {
       const error = new Error('Could not find candidate.');
+      error.statusCode = 404;
+      throw error;
+    }
+    if (candidate.firstname === GENESIS_CANDIDATE) {
+      const error = new Error('Forbidden request, access denied');
       error.statusCode = 404;
       throw error;
     }

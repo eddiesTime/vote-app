@@ -2,13 +2,16 @@ const { validationResult } = require('express-validator/check');
 
 const District = require('../models/district');
 
+const GENESIS_DISTRICT = 'Genesis Block District Name';
+
 exports.getDistricts = async (req, res, next) => {
   try {
-    console.log('try get all');
     const districts = await District.find();
-    res.status(200).json(districts);
+    const noGenDistricts = districts.filter(district => {
+      return district.districtName !== GENESIS_DISTRICT;
+    });
+    res.status(200).json(noGenDistricts);
   } catch (err) {
-    console.log('catch all');
     if (!err.statusCode) {
       err.statusCode = 500;
     }
@@ -25,6 +28,11 @@ exports.getDistrict = async (req, res, next) => {
       error.statusCode = 404;
       throw error;
     }
+    if (district.districtName === GENESIS_DISTRICT) {
+      const error = new Error('Forbidden request, access denied');
+      error.statusCode = 404;
+      throw error;
+    }
     res.status(200).json(district);
   } catch (err) {
     if (!err.statusCode) {
@@ -35,10 +43,9 @@ exports.getDistrict = async (req, res, next) => {
 };
 
 exports.createDistrict = async (req, res, next) => {
-  console.log('start create');
+  // if (req.isAdmin) {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    console.log('error case');
     const error = new Error('Validation failed, entered data is incorrect.');
     error.statusCode = 422;
     throw error;
@@ -56,9 +63,16 @@ exports.createDistrict = async (req, res, next) => {
   });
 
   try {
-    console.log('try');
-    await district.save();
-    res.status(201).end('District created successfully!');
+    const oldDistrict = await District.findOne({
+      districtName: districtName
+    });
+    if (oldDistrict) {
+      const error = new Error('District has already been created!');
+      error.statusCode = 400;
+      throw error;
+    }
+    const newDistrict = await district.save();
+    res.status(201).json(newDistrict);
   } catch (err) {
     console.log('catch');
     if (!err.statusCode) {
@@ -66,6 +80,11 @@ exports.createDistrict = async (req, res, next) => {
     }
     next(err);
   }
+  // } else {
+  //   const error = new Error('Not authorized!');
+  //   error.statusCode = 401;
+  //   next(error);
+  // }
 };
 
 exports.updateDistrict = async (req, res, next) => {
@@ -82,6 +101,17 @@ exports.updateDistrict = async (req, res, next) => {
   const districtName = req.body.districtName;
 
   try {
+    const oldDistrict = await District.findOne({
+      districtName: districtName
+    });
+    if (oldDistrict) {
+      const error = new Error(
+        'District cannot be updated! A District with this name already exists'
+      );
+      error.statusCode = 400;
+      throw error;
+    }
+
     const district = await District.findById(districtId);
     if (!district) {
       const error = new Error('Could not find district.');
@@ -93,7 +123,7 @@ exports.updateDistrict = async (req, res, next) => {
     district.districtName = districtName;
 
     const updatedDistrict = await district.save();
-    res.status(200).json(updatedCandidate);
+    res.status(200).json(updatedDistrict);
   } catch (err) {
     if (!err.statusCode) {
       err.statusCode = 500;
@@ -104,6 +134,8 @@ exports.updateDistrict = async (req, res, next) => {
 
 exports.deleteDistrict = async (req, res, next) => {
   const districtId = req.params.districtId;
+  console.log(req.params);
+  console.log(districtId);
   try {
     const district = await District.findById(districtId);
     if (!district) {
