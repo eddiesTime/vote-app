@@ -1,6 +1,5 @@
 const { validationResult } = require('express-validator/check');
 
-const io = require('socket.io');
 const Candidate = require('../models/candidate');
 
 const GENESIS_CANDIDATE = 'Genesis Block';
@@ -66,10 +65,6 @@ exports.createCandidate = async (req, res, next) => {
 
   try {
     await candidate.save();
-    io.getIO().emit('candidate', {
-      action: 'create',
-      candidate: { ...candidate._doc }
-    });
     res.status(201).end('Candidate created successfully');
   } catch (err) {
     if (!err.statusCode) {
@@ -93,11 +88,11 @@ exports.updateCandidate = async (req, res, next) => {
   const lastname = req.body.lastname;
   const faction = req.body.faction;
 
-  if (!imageUrl) {
-    const error = new Error('No file picked.');
-    error.statusCode = 422;
-    throw error;
-  }
+  // if (!imageUrl) {
+  //   const error = new Error('No file picked.');
+  //   error.statusCode = 422;
+  //   throw error;
+  // }
 
   try {
     const candidate = await Candidate.findById(candidateId);
@@ -111,10 +106,6 @@ exports.updateCandidate = async (req, res, next) => {
     candidate.lastname = lastname;
     candidate.faction = faction;
     const updatedCandidate = await candidate.save();
-    io.getIO().emit('candidate', {
-      action: 'update',
-      candidate: updatedCandidate
-    });
     res.status(200).json(updatedCandidate);
   } catch (err) {
     if (!err.statusCode) {
@@ -134,7 +125,6 @@ exports.deleteCandidate = async (req, res, next) => {
       throw error;
     }
     await Candidate.findByIdAndDelete(candidateId);
-    io.getIO().emit('candidate', { action: 'delete', candidate: candidateId });
     res.status(200).end('Candidate deleted successfully');
   } catch (err) {
     if (!err.statusCode) {

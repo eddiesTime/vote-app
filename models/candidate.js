@@ -18,8 +18,7 @@ const candidateSchema = new Schema({
     enum: ['Rick', 'Morty', 'Jerry']
   },
   imageUrl: {
-    type: String,
-    required: true
+    type: String
   }
 });
 
